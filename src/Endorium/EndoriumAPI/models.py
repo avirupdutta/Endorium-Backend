@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class Users(models.Model):
+class User(models.Model):
     user_id = models.AutoField(primary_key=True)
     user_name = models.CharField(max_length=200)
     password = models.CharField(max_length=50)
@@ -11,7 +11,7 @@ class Users(models.Model):
 
 class AdminMap(models.Model):
     room_id = models.AutoField(primary_key=True)
-    admin_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+    admin_id = models.ForeignKey(User, on_delete=models.CASCADE)
     phrase = models.IntegerField()
 
     def __str__(self):
@@ -19,7 +19,7 @@ class AdminMap(models.Model):
 
 class UserMap(models.Model):
     map_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     room_id = models.ForeignKey(AdminMap, on_delete=models.CASCADE)
     banned = models.IntegerField()
 
@@ -38,7 +38,7 @@ class Message(models.Model):
 
 class Message2(models.Model):
     message_id = models.ForeignKey(Message, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     upvote_id = models.IntegerField(blank=True)
     downvote_id = models.IntegerField(blank=True)
 
