@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 //get one
-router.get('/:id', (req, res) => {
+router.get('/:id', getUser, (req, res) => {
 
 });
 
@@ -37,13 +37,30 @@ router.post('/', async (req, res) => {
 });
 
 //update one
-router.patch('/:id', (req, res) => {
+router.patch('/:id', getUser, (req, res) => {
 
 });
 
 //delete one
-router.delete('/:id', (req, res) => {
+router.delete('/:id', getUser, (req, res) => {
 
 });
+
+//Middle for One user
+async function getUser(req, res, next) {
+    let user;
+    try {
+        user = await User.findById(req.params.id);
+        if( user == null)
+        {
+            return res.status(404).json({ message: 'Cannot find User' })
+        }
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+
+    res.user = user;
+    next();
+}
 
 module.exports = router;
