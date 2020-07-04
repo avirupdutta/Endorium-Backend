@@ -60,7 +60,12 @@ router.patch('/:id', getMessages, async (req, res) => {
 
 //delete one
 router.delete('/:id', getMessages, async (req, res) => {
-
+    try {
+        await res.message.remove();
+        res.json({ message: 'Deleted Message '});
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 });
 
 //Middle for One Message
