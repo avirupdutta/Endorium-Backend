@@ -63,8 +63,13 @@ router.patch('/:id', getUser, async (req, res) => {
 });
 
 //delete one
-router.delete('/:id', getUser, (req, res) => {
-
+router.delete('/:id', getUser, async (req, res) => {
+    try {
+        await res.user.remove();
+        res.json({ message: 'Deleted User '});
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 });
 
 //Middle for One user
