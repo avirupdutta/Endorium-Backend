@@ -11,6 +11,9 @@ db.once('open', () => console.log('Connected to Database'));
 
 app.use(express.json());
 
+const usersRouter = require('./routes/users');
+app.use('/api/users', usersRouter);
+
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => console.log(`The Server is running on ${PORT}`));
