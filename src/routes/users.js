@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 
 //get one
 router.get('/:id', getUser, (req, res) => {
-
+    res.json(res.user);
 });
 
 //post one
