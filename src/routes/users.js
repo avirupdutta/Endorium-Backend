@@ -37,8 +37,29 @@ router.post('/', async (req, res) => {
 });
 
 //update one
-router.patch('/:id', getUser, (req, res) => {
+router.patch('/:id', getUser, async (req, res) => {
+    if( req.body.name != null) {
+        res.user.name = req.body.name;
+    }
+    if( req.body.email != null) {
+        res.user.email = req.body.email;
+    }
+    if( req.body.password != null) {
+        res.user.password = req.body.password;
+    }
+    if( req.body.is_admin != null) {
+        res.user.is_admin = req.body.is_admin;
+    }
+    if( req.body.current_room != null) {
+        res.user.current_room = req.body.current_room;
+    }
 
+    try {
+        const updatedUser = await res.user.save();
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
 });
 
 //delete one
