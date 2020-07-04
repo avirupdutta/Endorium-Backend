@@ -37,7 +37,25 @@ router.post('/', async (req, res) => {
 
 //update one
 router.patch('/:id', getMessages, async (req, res) => {
+    if( req.body.message != null) {
+        res.message.message = req.body.message;
+    }
+    if( req.body.created_by_user != null) {
+        res.message.created_by_user = req.body.created_by_user;
+    }
+    if( req.body.room_no != null) {
+        res.message.room_no = req.body.room_no;
+    }
+    if( req.body.upvote != null) {
+        res.message.upvote = req.body.upvote;
+    }
 
+    try {
+        const updatedMessage = await res.message.save();
+        res.json(updatedMessage);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
 });
 
 //delete one
