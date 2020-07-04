@@ -19,8 +19,21 @@ router.get('/:id', (req, res) => {
 });
 
 //post one
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+    const user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        is_admin: req.body.is_admin,
+        current_room: req.body.current_room
+    });
 
+    try {
+        const newUser = await user.save();
+        res.status(201).json(newUser);
+    } catch (err) {
+        res.status(400).json({ message: json.message });
+    }
 });
 
 //update one

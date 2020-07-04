@@ -14,13 +14,14 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     is_admin: {
-        type: String,
+        type: Boolean,
         required: true,
         default: false
     },
     current_room: {
         type: String,
-        required: false
+        required: false,
+        default: null
     }
 });
 
