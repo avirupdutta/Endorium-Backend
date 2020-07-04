@@ -16,6 +16,11 @@ app.use(express.json());
 const usersRouter = require('./routes/users');
 app.use('/api/users', usersRouter);
 
+//Message Route
+const messagesRouter = require('./routes/messages');
+app.use('/api/messages', messagesRouter);
+
+
 //Listening on a port
 const PORT = process.env.PORT || 8000;
 
