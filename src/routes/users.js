@@ -1,5 +1,6 @@
 const express = require("express");
 const bcryptjs = require("bcryptjs");
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 const User = require("../models/users");
@@ -19,6 +20,35 @@ router.get("/", async (req, res) => {
 router.get("/:id", getUser, (req, res) => {
 	res.json(res.user);
 });
+
+//login
+router.post("/login", async (req, res) => {
+	try {
+		const user = await User.findOne( { email: req.body.email} );
+		if (!user)
+		{
+			return res.status(404).json({ message: "The given email is invalid"});
+		}
+		else {
+			const isPasswordMatch = await bcryptjs.compare(req.body.password, user.password);
+			if (!isPasswordMatch) {
+				return res.status(404).json({ message: "The given passward is invalid"});
+			}
+			else {
+				jwt.sign({user}, process.env.SECRET_KEY, (err, token) => {
+					return res.status(201).json({
+					token,
+					user
+					});
+				});
+			}
+		}
+	} catch(err)
+	{
+		res.status(500).json({ message: err.message });
+	}
+	
+})
 
 //post one
 router.post("/", async (req, res) => {
@@ -103,5 +133,6 @@ async function getUser(req, res, next) {
 	res.user = user;
 	next();
 }
+
 
 module.exports = router;

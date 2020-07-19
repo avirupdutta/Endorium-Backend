@@ -1,13 +1,13 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const { DATABASE_URL } = require("./keys");
+//const { DATABASE_URL } = require("./keys");
 const usersRouter = require("./routes/users");
 const messagesRouter = require("./routes/messages");
 const app = express();
 
 //Connection to Database
-mongoose.connect(DATABASE_URL, {
+mongoose.connect( process.env.DATABASE_URL, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 });
