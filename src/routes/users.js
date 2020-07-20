@@ -1,13 +1,14 @@
 const express = require("express");
 const bcryptjs = require("bcryptjs");
 const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 const User = require("../models/users");
 const { json } = require("express");
 
 //Get all
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
 	try {
 		const users = await User.find();
 		res.json(users);
@@ -17,7 +18,7 @@ router.get("/", async (req, res) => {
 });
 
 //get one
-router.get("/:id", getUser, (req, res) => {
+router.get("/:id", auth, getUser, (req, res) => {
 	res.json(res.user);
 });
 
@@ -35,7 +36,7 @@ router.post("/login", async (req, res) => {
 				return res.status(404).json({ message: "The given passward is invalid"});
 			}
 			else {
-				jwt.sign({user}, process.env.SECRET_KEY, (err, token) => {
+				jwt.sign({user}, process.env.SECRET_KEY, { expiresIn: '30 days' }, (err, token) => {
 					return res.status(201).json({
 					token,
 					user
@@ -47,10 +48,10 @@ router.post("/login", async (req, res) => {
 	{
 		res.status(500).json({ message: err.message });
 	}
-	
-})
+});
 
 //post one
+//Register
 router.post("/", async (req, res) => {
 	const user = new User({
 		name: req.body.name,
@@ -83,7 +84,7 @@ router.post("/", async (req, res) => {
 });
 
 //update one
-router.patch("/:id", getUser, async (req, res) => {
+router.patch("/:id", auth, getUser, async (req, res) => {
 	if (req.body.name != null) {
 		res.user.name = req.body.name;
 	}
@@ -109,7 +110,7 @@ router.patch("/:id", getUser, async (req, res) => {
 });
 
 //delete one
-router.delete("/:id", getUser, async (req, res) => {
+router.delete("/:id", auth, getUser, async (req, res) => {
 	try {
 		await res.user.remove();
 		res.json({ message: "Deleted User" });
@@ -133,6 +134,5 @@ async function getUser(req, res, next) {
 	res.user = user;
 	next();
 }
-
 
 module.exports = router;

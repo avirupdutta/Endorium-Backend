@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Message = require("../models/messages");
 const { json } = require("express");
+const auth = require('../middleware/auth');
 
 //Get all
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
 	try {
 		const messages = await Message.find();
 		res.json(messages);
@@ -14,12 +15,12 @@ router.get("/", async (req, res) => {
 });
 
 //get one
-router.get("/:id", getMessages, (req, res) => {
+router.get("/:id", auth, getMessages, (req, res) => {
 	res.json(res.message);
 });
 
 //post one
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
 	const message = new Message({
 		message: req.body.message,
 		created_by_user: req.body.created_by_user,
@@ -36,7 +37,7 @@ router.post("/", async (req, res) => {
 });
 
 //update one
-router.patch("/:id", getMessages, async (req, res) => {
+router.patch("/:id", auth, getMessages, async (req, res) => {
 	if (req.body.message != null) {
 		res.message.message = req.body.message;
 	}
@@ -59,7 +60,7 @@ router.patch("/:id", getMessages, async (req, res) => {
 });
 
 //delete one
-router.delete("/:id", getMessages, async (req, res) => {
+router.delete("/:id", auth, getMessages, async (req, res) => {
 	try {
 		await res.message.remove();
 		res.json({ message: "Deleted Message " });
