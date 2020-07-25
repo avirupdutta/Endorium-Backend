@@ -4,7 +4,8 @@
 	"description": "A Real time annonymous chat application",
 	"main": "server.js",
 	"scripts": {
-		"devStart": "nodemon server.js"
+		"start": "node ./src/server.js",
+		"devStart": "nodemon ./src/server.js"
 	},
 	"author": "",
 	"license": "ISC",

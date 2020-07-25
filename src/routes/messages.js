@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Message = require("../models/messages");
 const { json } = require("express");
-const auth = require('../middleware/auth');
+const { auth, getMessages } = require('../middleware/auth');
 
 //Get all
 router.get("/", auth, async (req, res) => {
@@ -68,21 +68,5 @@ router.delete("/:id", auth, getMessages, async (req, res) => {
 		res.status(500).json({ message: err.message });
 	}
 });
-
-//Middle for One Message
-async function getMessages(req, res, next) {
-	let message;
-	try {
-		message = await Message.findById(req.params.id);
-		if (message == null) {
-			return res.status(404).json({ message: "Cannot find the Message" });
-		}
-	} catch (err) {
-		return res.status(500).json({ message: err.message });
-	}
-
-	res.message = message;
-	next();
-}
 
 module.exports = router;
