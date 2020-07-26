@@ -1,7 +1,7 @@
 const express = require("express");
 const bcryptjs = require("bcryptjs");
-const jwt = require('jsonwebtoken');
-const { auth, getUser } = require('../middleware/auth');
+const jwt = require("jsonwebtoken");
+const { auth, getUser } = require("../middleware");
 
 const router = express.Router();
 const User = require("../models/users");
@@ -26,20 +26,30 @@ router.post("/login", async (req, res) => {
 	try {
 		const user = await User.findOne({ email: req.body.email });
 		if (!user) {
-			return res.status(404).json({ message: "The given email is invalid" });
-		}
-		else {
-			const isPasswordMatch = await bcryptjs.compare(req.body.password, user.password);
+			return res
+				.status(404)
+				.json({ message: "The given email is invalid" });
+		} else {
+			const isPasswordMatch = await bcryptjs.compare(
+				req.body.password,
+				user.password
+			);
 			if (!isPasswordMatch) {
-				return res.status(404).json({ message: "The given passward is invalid" });
-			}
-			else {
-				jwt.sign({ user }, process.env.SECRET_KEY, { expiresIn: '30 days' }, (err, token) => {
-					return res.status(201).json({
-						token,
-						user
-					});
-				});
+				return res
+					.status(404)
+					.json({ message: "The given passward is invalid" });
+			} else {
+				jwt.sign(
+					{ user },
+					process.env.SECRET_KEY,
+					{ expiresIn: "30 days" },
+					(err, token) => {
+						return res.status(201).json({
+							token,
+							user
+						});
+					}
+				);
 			}
 		}
 	} catch (err) {

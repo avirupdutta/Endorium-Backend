@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Message = require("../models/messages");
 const { json } = require("express");
-const { auth, getMessages } = require('../middleware/auth');
+const { auth, getMessages } = require("../middleware");
 
 //Get all
 router.get("/", auth, async (req, res) => {
