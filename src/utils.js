@@ -8,7 +8,6 @@ const getFilteredItem = item => {
 			newObj[key] = item[key];
 		}
 	});
-	console.log(newObj);
 	return newObj;
 };
 
