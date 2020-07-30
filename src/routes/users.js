@@ -2,6 +2,7 @@ const express = require("express");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { auth, getUser } = require("../middleware");
+const { getFilteredItem } = require("../utils");
 
 const router = express.Router();
 const User = require("../models/users");
@@ -18,7 +19,8 @@ router.get("/", auth, async (req, res) => {
 
 //get one
 router.get("/:id", auth, getUser, (req, res) => {
-	res.json(res.user);
+	const item = getFilteredItem(res.user);
+	res.json(item);
 });
 
 //login
@@ -45,8 +47,10 @@ router.post("/login", async (req, res) => {
 					{ expiresIn: "30 days" },
 					(err, token) => {
 						return res.status(201).json({
-							token,
-							user
+							user: {
+								...getFilteredItem(user),
+								token
+							}
 						});
 					}
 				);
@@ -59,7 +63,7 @@ router.post("/login", async (req, res) => {
 
 //post one
 //Register
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
 	const user = new User({
 		name: req.body.name,
 		email: req.body.email,
