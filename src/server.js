@@ -1,13 +1,15 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const { DATABASE_URL } = require("./settings");
+//const { DATABASE_URL } = require("./settings");
 const usersRouter = require("./routes/users");
 const messagesRouter = require("./routes/messages");
+const tokenRouter = require("./routes/token")
+
 const app = express();
 
 //Connection to Database
-mongoose.connect(DATABASE_URL, {
+mongoose.connect( process.env.DATABASE_URL, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 });
@@ -21,6 +23,7 @@ app.use(express.json());
 // Setting up the routes
 app.use("/api/users", usersRouter);
 app.use("/api/messages", messagesRouter);
+app.use("/api/token", tokenRouter);
 
 //Listening on a port
 const PORT = process.env.PORT || 8000;
