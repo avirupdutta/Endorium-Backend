@@ -1,15 +1,17 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-//const { DATABASE_URL } = require("./settings");
+const cors = require("cors");
+const { DATABASE_URL } = require("./settings");
 const usersRouter = require("./routes/users");
 const messagesRouter = require("./routes/messages");
-const tokenRouter = require("./routes/token")
+const tokenRouter = require("./routes/token");
 
 const app = express();
+app.use(cors());
 
 //Connection to Database
-mongoose.connect( process.env.DATABASE_URL, {
+mongoose.connect(DATABASE_URL, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 });
