@@ -41,16 +41,19 @@ router.post("/login", async (req, res) => {
 					.status(404)
 					.json({ message: "The given passward is invalid" });
 			} else {
+				let tempUser = {
+					name: user.name,
+					email: user.email,
+					is_admin: user.is_admin,
+					current_room: user.current_room
+				}
 				jwt.sign(
-					{ user },
+					{ ...tempUser },
 					process.env.SECRET_KEY,
 					{ expiresIn: "30 days" },
 					(err, token) => {
-						return res.status(201).json({
-							user: {
-								...getFilteredItem(user),
-								token
-							}
+						return res.status(200).json({
+							token
 						});
 					}
 				);
