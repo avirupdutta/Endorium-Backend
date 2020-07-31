@@ -1,10 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-<<<<<<< HEAD
 const cors = require("cors");
-=======
->>>>>>> 4dfacbe804cee053df7f503872138165d405b8ac
 const { DATABASE_URL } = require("./settings");
 const usersRouter = require("./routes/users");
 const messagesRouter = require("./routes/messages");
@@ -15,16 +12,11 @@ app.use(cors());
 
 //Connection to Database
 mongoose.connect(DATABASE_URL, {
-<<<<<<< HEAD
 	useNewUrlParser: true,
 	useUnifiedTopology: true
-=======
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
->>>>>>> 4dfacbe804cee053df7f503872138165d405b8ac
 });
 const db = mongoose.connection;
-db.on("error", (error) => console.error(error));
+db.on("error", error => console.error(error));
 db.once("open", () => console.log("Connected to Database"));
 
 // setting up the server for req with json body
@@ -39,5 +31,5 @@ app.use("/api/token", tokenRouter);
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () =>
-  console.log(`The Server is running on http://localhost:${PORT}`)
+	console.log(`The Server is running on http://localhost:${PORT}`)
 );
