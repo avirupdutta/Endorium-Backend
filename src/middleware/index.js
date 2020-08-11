@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const Message = require("../models/messages");
+const Room = require("../models/rooms");
 
 const auth = (req, res, next) => {
   try {
@@ -44,8 +45,24 @@ async function getMessages(req, res, next) {
   next();
 }
 
+async function getRoom(req, res, next) {
+  let room;
+  try {
+    room = await Room.findById(req.params.id);
+    if (room == null) {
+      return res.status(404).json({ message: "Cannot find the Message" });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+
+  res.room = room;
+  next();
+}
+
 module.exports = {
   auth,
   getUser,
   getMessages,
+  getRoom,
 };
