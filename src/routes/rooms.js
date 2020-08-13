@@ -5,7 +5,7 @@ const { json } = require("express");
 const { auth, getRoom } = require("../middleware");
 
 //Get all
-router.get("/", auth, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const room = await Room.find();
     res.json(room);
@@ -15,7 +15,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 //get one
-router.get("/:id", auth, getRoom, (req, res) => {
+router.get("/:id", getRoom, (req, res) => {
   res.json(res.room);
 });
 
@@ -27,7 +27,11 @@ router.post("/", auth, async (req, res) => {
 
   try {
     const newRoom = await room.save();
-    res.status(201).json(newRoom);
+    const tempRoom = {
+      room_name: newRoom.room_name,
+      room_id: newRoom.room_id,
+    };
+    res.status(201).json(tempRoom);
   } catch (err) {
     res.status(400).json({ message: json.message });
   }
