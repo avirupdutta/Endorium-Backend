@@ -42,7 +42,7 @@ router.post("/", auth, async (req, res) => {
 router.delete("/:id", auth, getRoom, async (req, res) => {
 	try {
 		await res.room.remove();
-		res.json({ message: "Deleted Room " });
+		res.json({ message: "Room deleted successfully!" });
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
