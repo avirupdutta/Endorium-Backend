@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
   current_room: {
     type: String,
     required: false,
-    default: null,
+    default: "",
   },
 });
 
