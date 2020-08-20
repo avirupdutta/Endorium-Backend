@@ -33,16 +33,25 @@ app.use("/api/messages", messagesRouter);
 app.use("/api/token", tokenRouter);
 app.use("/api/rooms", roomRouter);
 
-io.sockets.on("connection", (socket) => {
-  console.log(`A user Connected ${socket.id}`);
-  //sample code
-  socket.join("room");
-  socket.to("room").emit("some event");
-});
-
 //Listening on a port
 const PORT = process.env.PORT || 8000;
 
 server.listen(PORT, () =>
   console.log(`The Server is running on http://localhost:${PORT}`)
 );
+
+io.on("connection", (socket) => {
+  console.log(`A user Connected ${socket.id}`);
+
+  socket.on("joinRoom", (data) => {
+    socket.join(data.room_id);
+
+    socket.broadcast
+      .to(data.room_id)
+      .emit("userJoin", "A User has Join the Room");
+
+    socket.on("chatMessage", (data) => {
+      socket.broadcast.to(data.room_id).emit("message", data.userAndMsg);
+    });
+  });
+});
