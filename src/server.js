@@ -17,11 +17,11 @@ app.use(cors());
 
 //Connection to Database
 mongoose.connect(DATABASE_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+	useNewUrlParser: true,
+	useUnifiedTopology: true
 });
 const db = mongoose.connection;
-db.on("error", (error) => console.error(error));
+db.on("error", error => console.error(error));
 db.once("open", () => console.log("Connected to Database"));
 
 // setting up the server for req with json body
@@ -37,21 +37,33 @@ app.use("/api/rooms", roomRouter);
 const PORT = process.env.PORT || 8000;
 
 server.listen(PORT, () =>
-  console.log(`The Server is running on http://localhost:${PORT}`)
+	console.log(`The Server is running on http://localhost:${PORT}`)
 );
 
-io.on("connection", (socket) => {
-  console.log(`A user Connected ${socket.id}`);
+let totalSockets = 0;
 
-  socket.on("joinRoom", (data) => {
-    socket.join(data.room_id);
+io.on("connection", socket => {
+	totalSockets++;
+	console.log(
+		`User is Connected ${socket.id}  || total sockets: ${totalSockets}`
+	);
 
-    socket.broadcast
-      .to(data.room_id)
-      .emit("userJoin", "A User has Join the Room");
+	socket.on("joinRoom", data => {
+		socket.join(data.room_id);
 
-    socket.on("chatMessage", (data) => {
-      socket.broadcast.to(data.room_id).emit("message", data.userAndMsg);
-    });
-  });
+		socket.broadcast
+			.to(data.room_id)
+			.emit("userJoin", "A User has Join the Room");
+
+		socket.on("chatMessage", data => {
+			socket.broadcast.to(data.room_id).emit("message", data.userAndMsg);
+		});
+	});
+
+	socket.on("disconnect", () => {
+		totalSockets--;
+		console.log(
+			`User disconnected: ${socket.id} || total sockets: ${totalSockets}`
+		);
+	});
 });
